@@ -1,5 +1,11 @@
 import json
 from rank_bm25 import BM25Okapi
+import gzip
+import requests
+url= "https://drive.usercontent.google.com/download?id=1vBudp6u7VZJD8UMVxsDOcf3P1-JQ8d4E&export=download&authuser=0"
+response = requests.get(url)
+data = gzip.decompress(response.content)
+records = [json.loads(line) for line in data.splitlines()]
 
 def is_real_sense(sense):
     # placeholder: adjust to your real logic
