@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Greek Dictionary RAG - Result</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container results-container">
+      <h1>Greek Dictionary RAG</h1>
+      
+      <div class="query-header">
+        <h2>Η λέξη/φράση που ψάχνετε είναι: <span class="query-text">{{ query }}</span></h2>
+      </div>
+      
+      <div class="answer-section">
+        <h3>Απάντηση</h3>
+        <div class="answer-content">{{ answer|safe }}</div>
+      </div>
+      
+      {% if retrieved %}
+      <div class="retrieved-section">
+        <h3>Retrieved Entries</h3>
+        {% for r in retrieved %}
+        <div class="retrieved-item">
+          <h4>{{ r.word }} <span class="source">({{ r.source }}, score: {{ "%.3f"|format(r.score) }})</span></h4>
+          <p>{{ r.definition }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      
+      <div class="back-link">
+        <a href="/" class="back-button">← Επιστροφή</a>
+      </div>
+    </div>
+  </body>
+</html>
+

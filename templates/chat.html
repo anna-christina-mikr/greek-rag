@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Greek Dictionary RAG</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-header">
+        <h1>Greek Dictionary RAG</h1>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages will be added here dynamically -->
+      </div>
+      
+      <div class="chat-input-container">
+        <form id="chatForm" class="chat-form">
+          <input 
+            type="text" 
+            id="messageInput" 
+            placeholder="Εισάγετε λέξη ή φράση στα Ελληνικά..."
+            autocomplete="off"
+            required 
+          />
+          <button type="submit" id="sendButton">
+            <span id="buttonText">Send</span>
+            <span id="buttonLoader" class="loader" style="display: none;">⏳</span>
+          </button>
+        </form>
+      </div>
+    </div>
+    <script>
+      const chatMessages = document.getElementById('chatMessages');
+      const chatForm = document.getElementById('chatForm');
+      const messageInput = document.getElementById('messageInput');
+      const sendButton = document.getElementById('sendButton');
+      const buttonText = document.getElementById('buttonText');
+      const buttonLoader = document.getElementById('buttonLoader');
+      
+      function addMessage(content, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
+        messageContent.textContent = content;
+        
+        messageDiv.appendChild(messageContent);
+        chatMessages.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Add fade-in animation
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+          messageDiv.style.transition = 'all 0.3s ease';
+          messageDiv.style.opacity = '1';
+          messageDiv.style.transform = 'translateY(0)';
+        }, 10);
+      }
+      
+      function addLoadingMessage() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+        messageDiv.id = 'loadingMessage';
+        
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content loading';
+        messageContent.innerHTML = '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+        
+        messageDiv.appendChild(messageContent);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      
+      function removeLoadingMessage() {
+        const loadingMessage = document.getElementById('loadingMessage');
+        if (loadingMessage) {
+          loadingMessage.remove();
+        }
+      }
+      
+      chatForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
+        
+        // Add user message to chat
+        addMessage(userMessage, true);
+        
+        // Clear input and disable button
+        messageInput.value = '';
+        sendButton.disabled = true;
+        buttonText.style.display = 'none';
+        buttonLoader.style.display = 'inline-block';
+        
+        // Show loading indicator
+        addLoadingMessage();
+        
+        try {
+          const formData = new FormData();
+          formData.append('query', userMessage);
+          
+          const response = await fetch('/chat', {
+            method: 'POST',
+            body: formData
+          });
+          
+          const data = await response.json();
+          
+          // Remove loading message
+          removeLoadingMessage();
+          
+          // Add bot response
+          if (data.answer) {
+            addMessage(data.answer, false);
+          } else {
+            addMessage('Sorry, I could not generate a response.', false);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          removeLoadingMessage();
+          addMessage('Sorry, there was an error processing your request.', false);
+        } finally {
+          // Re-enable button
+          sendButton.disabled = false;
+          buttonText.style.display = 'inline';
+          buttonLoader.style.display = 'none';
+          messageInput.focus();
+        }
+      });
+      
+      // Focus input on load
+      messageInput.focus();
+    </script>
+  </body>
+</html>
