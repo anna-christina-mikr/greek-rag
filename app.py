@@ -9,9 +9,11 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+import openai 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 templates = Jinja2Templates(directory="templates")
 
