@@ -11,7 +11,7 @@ def load_bm25_corpus():
     bm25_corpus = []
     vocab = []
 
-    with open("el-extract.jsonl", "r", encoding="utf-8") as f:
+    with gzip.open("el-extract.jsonl.gz", "rb") as f:
         for line in f:
             entry = json.loads(line.strip())
             if entry.get("lang") == "Greek" and entry.get("pos") and "senses" in entry:
