@@ -4,31 +4,43 @@ import gzip
 import requests
 
 
-def is_real_sense(sense):
-    # placeholder: adjust to your real logic
-    return True
-def load_bm25_corpus(limit: int = 10):
+
+
+
+    def load_bm25_corpus(limit: int = 20):   # choose a size that fits in memory
     bm25_corpus = []
     vocab = []
 
+    count = 0
+
     with gzip.open("el-extract.jsonl.gz", "rb") as f:
         for line in f:
+            if count >= limit:
+                break
+
             entry = json.loads(line.strip())
             if entry.get("lang") == "Greek" and entry.get("pos") and "senses" in entry:
                 lemma = entry["word"]
                 for sense in entry["senses"]:
-                    if is_real_sense(sense):
-                        glosses = sense.get("glosses", [])
-                        examples = sense.get("examples", [])
-                        text_parts = [lemma]
-                        if glosses:
-                            text_parts.append(glosses[0])
-                        if examples:
-                            text_parts.append(examples[0].get("text", ""))
-                        full_text = ". ".join(text_parts)
-                        bm25_corpus.append(full_text)
-                        vocab.append(lemma)
+                    glosses = sense.get("glosses", [])
+                    examples = sense.get("examples", [])
+
+                    text_parts = [lemma]
+                    if glosses:
+                        text_parts.append(glosses[0])
+                    if examples:
+                        text_parts.append(examples[0].get("text", ""))
+
+                    full_text = ". ".join(text_parts)
+                    bm25_corpus.append(full_text)
+                    vocab.append(lemma)
+
+                    count += 1
+                    if count >= limit:
+                        break
+
     return bm25_corpus, vocab
+
 
 # Build corpus and index at import time
 bm25_corpus, vocab = load_bm25_corpus()
