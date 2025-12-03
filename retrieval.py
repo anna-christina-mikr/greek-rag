@@ -7,7 +7,7 @@ import requests
 def is_real_sense(sense):
     # placeholder: adjust to your real logic
     return True
-def load_bm25_corpus():
+def load_bm25_corpus( query: str, limit: int = 10 ):
     bm25_corpus = []
     vocab = []
 
