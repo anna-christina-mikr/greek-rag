@@ -7,7 +7,7 @@ import requests
 
 
 
-    def load_bm25_corpus(limit: int = 20):   # choose a size that fits in memory
+def load_bm25_corpus(limit: int = 20):   # choose a size that fits in memory
     bm25_corpus = []
     vocab = []
 
