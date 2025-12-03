@@ -9,17 +9,16 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+
 import openai 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-
 templates = Jinja2Templates(directory="templates")
 
     
 #Create OpenAI client
-#client = OpenAI(api_key="sk-proj-#BN7EBO3d2XI06m8PYYYLAsG6N21lq1AYPy5I9G3Qe6STheSJ97ntX5i10Wp4w7vbe9xmp3jGpVT3Bl#bkFJ97rDdRp-biwXXHL2gtTAqDd3Gb07Jpyciu5f7h4eZfPiG64FVMJFz3uXAwtw26F8wPM0Pci8UA")
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 
 def build_rag_answer(query: str, k:int=3):
