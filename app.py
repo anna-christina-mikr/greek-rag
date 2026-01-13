@@ -49,11 +49,11 @@ Task:
 - Explain what the query word/phrase means.
 - If there are multiple senses, list them briefly.
 - Optionally give 1–2 short example sentences in Greek.
-- Keep the explanation in Greek, but offer to help with English translation next.
+- Keep the explanation in Greek, but offer to help with any other word next.
 """
 
     completion = client.chat.completions.create(
-        model="gpt-4o-mini",  # or your chosen cheap model
+        model="gpt-4o-mini",  
         messages=[
             {"role": "system", "content": "You are a concise Greek vocabulary teacher."},
             {"role": "user", "content": prompt},
