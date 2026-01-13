@@ -2,9 +2,8 @@
 
 # Greek RAG Project
 
-A retrieval-augmented generation (RAG) app for Greek vocabulary.  
-It retrieves dictionary entries from a corpus and uses OpenAI’s GPT models 
-to provide concise explanations in Greek.
+A retrieval-augmented generation (RAG) app for Greek vocabulary.  Greek is considered a low resource language for AI and NLP applications so I thought I would give it a shot. 
+The model retrieves dictionary entries from a Wiktionary corpus and uses an OpenAI API to provide concise explanations in Greek.
 
 ---
 
