@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
 import openai 
-load_dotenv()
+load_dotenv(override=True)
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -53,7 +53,7 @@ Task:
 """
 
     completion = client.chat.completions.create(
-        model="gpt-4.1-mini",  # or your chosen cheap model
+        model="gpt-4o-mini",  # or your chosen cheap model
         messages=[
             {"role": "system", "content": "You are a concise Greek vocabulary teacher."},
             {"role": "user", "content": prompt},
@@ -72,15 +72,19 @@ async def home(request: Request):
 @app.post("/chat", response_class=JSONResponse)
 async def chat(query: str = Form(...)):
     """Chat endpoint that returns JSON response for the chatbot interface."""
-    answer, retrieved = build_rag_answer(query, k=5)
+    try:
+        answer, retrieved = build_rag_answer(query, k=5)
+        return JSONResponse({
+            "answer": answer,
+            "retrieved": retrieved,
+            "query": query
+        })
+    except Exception as e:
+        return JSONResponse({
+            "error": str(e),
+            "answer": f"Error: {str(e)}"
+        }, status_code=500)
     
-    # Return JSON response - you can modify this structure as needed
-    return JSONResponse({
-        "answer": answer,
-        "retrieved": retrieved,
-        "query": query
-    })
-
 @app.post("/search", response_class=HTMLResponse)
 async def search(request: Request, query: str = Form(...)):
     answer, retrieved = build_rag_answer(query, k=5)
@@ -94,8 +98,5 @@ async def search(request: Request, query: str = Form(...)):
             "retrieved": retrieved
         }
     )
-
-
-
     
 
