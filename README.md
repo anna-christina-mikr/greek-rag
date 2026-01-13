@@ -79,3 +79,5 @@ greek-rag/
 ├─ env.yml            # Conda environment (ignored in GitHub)
 ├─ requirements.txt   # Pip dependencies
 └─ README.md
+### Notes: 
+In my version, I ask the RAG to provide, one or two definitions and example sentences. This covers words with mutiple semantic meanings. For my BM25 function, every time it queries I use k=5 to retrieve the top 5 most relevant entries. But this can be adjusted, for lower resource languages, maybe a higher k would be better. I also plan to use SLANG.gr as a secondary source to enrich the vocabulary coverage, but this requires thourough web scraping, anyone feel free to try this out!
