@@ -16,6 +16,20 @@ to provide concise explanations in Greek.
 - GPT-powered explanation and example sentences
 - Web interface using FastAPI and Jinja2 templates
 
+## Data Sources
+
+The dictionary data used in this project is sourced from **Wiktionary** raw data dumps, extracted and processed by [kaikki.org](https://kaikki.org/dictionary/rawdata.html).
+Currently, we use the Greek language extraction (`el-extract.jsonl.gz`). In the future, we plan to integrate additional sources to enrich the vocabulary coverage.
+
+## Retrieval Method (BM25)
+
+To find relevant dictionary entries for a user's query, we use **BM25 (Best Matching 25)**.
+BM25 is a ranking function used by search engines to estimate the relevance of documents to a given search query. It improves upon simple keyword matching (TF-IDF) by:
+- **Term Frequency Saturation**: Preventing extremely frequent terms from dominating the score.
+- **Document Length Normalization**: Adjusting scores so that shorter documents (which might be more focused) are treated fairly compared to very long ones.
+
+In this app, we index the dictionary definitions and examples using BM25 to retrieve the top-k most relevant entries before passing them to the LLM for synthesis.
+
 ---
 
 ## Setup
