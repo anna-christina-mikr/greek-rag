@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 
 
 import openai 
+load_dotenv()
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -93,6 +94,7 @@ async def search(request: Request, query: str = Form(...)):
             "retrieved": retrieved
         }
     )
+
 
 
     
