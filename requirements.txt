@@ -57,3 +57,4 @@ wheel==0.45.1
 tzdata==2024.2
 
 datasets
+uvicorn
